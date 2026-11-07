@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>大数据赋能贵州，激活山地数字新动能</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Microsoft YaHei", sans-serif; }
+    html, body { width: 100%; overflow-x: hidden; }
+    body {
+        background-color: #f4f0f8;
+        padding-top: 160px; padding-left: 20px; padding-right: 20px; padding-bottom: 40px;
+        background-image: url("img/gzbj.jpg");
+        background-size: 99%; background-repeat: no-repeat; background-position: center; background-attachment: fixed;
+    }
+    body::before { content: ""; position: fixed; inset: 0; background: rgba(255,255,255,0.68); z-index: -1; pointer-events: none; }
+
+    /* 顶部固定栏 */
+    .header-fixed {
+        position: fixed; top: 0; left: 0; width: 100%;
+        background-color: #ffffff; padding: 20px 20px 12px; z-index: 999;
+        border-bottom: 2px solid #55aa7f; box-shadow: 0 2px 8px rgba(107,78,158,0.15);
+    }
+    .header-inner { max-width: 1100px; margin: 0 auto; text-align: center; position: relative; }
+    .back-btn {
+        position: absolute; top: 5px; left: 20px; background: linear-gradient(135deg, #6b4e9e, #4b3b70);
+        color: #fff; border: none; padding: 7px 14px; border-radius: 5px; font-size: 13px;
+        cursor: pointer; transition: all 0.3s ease;
+    }
+    .back-btn:hover { background: linear-gradient(135deg, #387c68, #2c6e49); transform: translateY(-2px); box-shadow: 0 4px 10px rgba(107,78,158,0.35); }
+    
+    .back-mobile {
+        display: none; position: fixed; left: 0; top: 50%; transform: translateY(-50%);
+        width: 26px; height: 60px; background-color: #6b4e9e; color: #fff; border: none;
+        border-radius: 0 12px 12px 0; font-size: 16px; cursor: pointer;
+        align-items: center; justify-content: center; box-shadow: 2px 0 6px rgba(0,0,0,0.14); z-index: 1001;
+    }
+
+    h1 { font-size: 30px; color: #5b3f8f; margin-bottom: 10px; font-weight: 600; }
+    .subtitle { font-size: 15px; color: #8b6fb0; margin-bottom: 0; letter-spacing: 1px; }
+    .content-wrap { max-width: 1100px; margin: 0 auto; }
+
+    .video-wrap {
+        background: #ffffff; padding: 30px; border-radius: 16px; box-shadow: 0 4px 14px rgba(107,78,158,0.12);
+        margin-bottom: 40px; border-top: 5px solid #6b4e9e;
+    }
+    .video-wrap h3 { text-align: center; color: #5b3f8f; font-size: 26px; margin-bottom: 22px; position: relative; }
+    .video-wrap h3::after { content: ""; display: block; width: 60px; height: 3px; background: linear-gradient(90deg,#6b4e9e,#387c68); margin: 8px auto 0; border-radius: 2px; }
+
+    .video-text-row { display: grid; grid-template-columns: 52% 46%; gap: 2%; align-items: center; }
+    .video-box { width: 100%; aspect-ratio: 16/9; border-radius: 10px; overflow: hidden; background: #000; box-shadow: 0 4px 12px rgba(107,78,158,0.2); }
+    .video-box video { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .video-desc { font-size: 17px; line-height: 1.8; color: #3a2f4d; }
+
+    .section-title { text-align: center; color: #5b3f8f; font-size: 28px; margin-bottom: 12px; font-weight: 600; }
+    .section-sub { text-align: center; color: #8b6fb0; font-size: 17px; margin-bottom: 32px; }
+
+    .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 40px; }
+    .compare-card { padding: 32px; border-radius: 16px; box-shadow: 0 4px 14px rgba(107,78,158,0.12); transition: all 0.3s ease; }
+    .compare-card:hover { transform: translateY(-5px); box-shadow: 0 10px 22px rgba(107,78,158,0.22); }
+    .compare-card h2 { font-size: 24px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+    .compare-card h2::before { content: ""; width: 8px; height: 22px; border-radius: 4px; }
+    .compare-card p { font-size: 16px; line-height: 1.8; margin-bottom: 10px; }
+
+    .card-tradition { background: linear-gradient(135deg, #f1eafa, #f7f2fc); border-left: 5px solid #6b4e9e; }
+    .card-tradition h2 { color: #5b3f8f; }
+    .card-tradition h2::before { background: #6b4e9e; }
+    .card-tradition p { color: #4a3d63; }
+
+    .card-smart { background: linear-gradient(135deg, #e3f1ea, #eef7f2); border-left: 5px solid #387c68; }
+    .card-smart h2 { color: #2c6e49; }
+    .card-smart h2::before { background: #387c68; }
+    .card-smart p { color: #2a5642; }
+
+    .tag-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+    .tag { padding: 6px 14px; border-radius: 20px; font-size: 14px; background: #fff; color: #2c6e49; border: 1px solid #9fc8b0; }
+    .tag-blue { color: #5b3f8f; border-color: #c4b3de; background: #f1eafa; }
+
+    .scene-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 40px; }
+    .scene-card { background: #ffffff; padding: 28px 22px; border-radius: 14px; box-shadow: 0 4px 14px rgba(107,78,158,0.12); border-top: 5px solid #6b4e9e; transition: all 0.3s ease; }
+    .scene-card:hover { transform: translateY(-6px); box-shadow: 0 10px 22px rgba(107,78,158,0.25); }
+    .scene-card h4 { font-size: 20px; color: #5b3f8f; margin-bottom: 10px; }
+    .scene-card p { font-size: 15px; color: #3a2f4d; line-height: 1.7; }
+    .scene-card .num { display: inline-block; background: #f1eafa; color: #6b4e9e; font-size: 13px; padding: 4px 10px; border-radius: 12px; margin-bottom: 12px; font-weight: bold; }
+    .scene-card.green-card { border-top-color: #387c68; }
+    .scene-card.green-card h4 { color: #2c6e49; }
+    .scene-card.green-card .num { background: #e3f1ea; color: #387c68; }
+
+    /* 电脑端的分割线样式 */
+    .river-text { text-align: center; font-size: 18px; color: #5b3f8f; margin: 32px 0; font-weight: 500; letter-spacing: 2px; position: relative; }
+    .river-text::before, .river-text::after {
+        content: ""; display: inline-block; width: 80px; height: 1px;
+        background: linear-gradient(90deg, #6b4e9e, #387c68); opacity: 0.5;
+        vertical-align: middle; margin: 0 15px;
+    }
+
+    /* ========== 轮播区 ========== */
+    .img-gallery-wrap { padding: 30px; background: linear-gradient(135deg, #ece3f7, #e3f1ea); border-radius: 16px; margin-bottom: 40px; }
+    .img-gallery-title { text-align: center; font-size: 26px; color: #5b3f8f; margin-bottom: 22px; font-weight: 600; }
+    .carousel-container { position: relative; width: 100%; max-width: 900px; margin: 0 auto; z-index: 1; }
+    .carousel-outer { position: relative; width: 100%; overflow: hidden; border-radius: 14px; border: 6px solid #6b4e9e; box-shadow: 0 8px 24px rgba(107,78,158,0.3), inset 0 0 10px rgba(0,0,0,0.5); background: #000; }
+    .carousel-window { position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; background: #000; }
+    .carousel-track { display: flex; width: 100%; height: 100%; transition: transform 0.6s ease-in-out; }
+    .carousel-slide { width: 100%; height: 100%; flex-shrink: 0; overflow: hidden; }
+    .carousel-slide img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; pointer-events: none; }
+    .carousel-slide:hover img { transform: scale(1.03); }
+    .carousel-dots { display: flex; justify-content: center; gap: 10px; margin-top: 16px; }
+    .carousel-dots .dot { width: 12px; height: 12px; border-radius: 50%; background: rgba(107,78,158,0.3); transition: all 0.3s ease; cursor: pointer; }
+    .carousel-dots .dot.active { background: #d4b46b; width: 24px; border-radius: 6px; }
+
+    .modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); backdrop-filter: blur(5px); justify-content: center; align-items: center; cursor: zoom-out; }
+    .modal img { max-width: 90%; max-height: 90%; border-radius: 8px; box-shadow: 0 0 30px rgba(255,255,255,0.2); border: 6px solid #6b4e9e; }
+
+    .life-block { padding: 36px 32px; background: #fff; border-radius: 16px; box-shadow: 0 4px 14px rgba(107,78,158,0.12); margin-bottom: 45px; border-top: 5px solid #387c68; transition: all 0.3s ease; }
+    .life-block:hover { transform: translateY(-4px); box-shadow: 0 10px 22px rgba(107,78,158,0.22); }
+    .life-block h3 { text-align: center; color: #5b3f8f; font-size: 26px; margin-bottom: 20px; position: relative; }
+    .life-block h3::after { content: ""; display: block; width: 60px; height: 3px; background: linear-gradient(90deg, #6b4e9e, #387c68); margin: 8px auto 0; border-radius: 2px; }
+    .life-text { font-size: 17px; color: #3a2f4d; line-height: 1.9; text-align: justify; text-indent: 2em; }
+
+    .bottom-bar { background: linear-gradient(90deg, #4b3b70, #2c6e49); border-radius: 16px; padding: 36px; text-align: center; color: #ffffff; box-shadow: 0 4px 16px rgba(107,78,158,0.3); }
+    .bottom-bar h3 { font-size: 24px; margin-bottom: 12px; font-weight: 600; }
+    .bottom-bar p { font-size: 17px; opacity: 0.95; line-height: 1.7; }
+
+    .back-top { position: fixed; right: 30px; bottom: 30px; width: 52px; height: 52px; background: #6b4e9e; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; box-shadow: 0 4px 12px rgba(107,78,158,0.35); cursor: pointer; transition: 0.3s ease; opacity: 0; visibility: hidden; z-index: 998; }
+    .back-top.show { opacity: 1; visibility: visible; }
+    .back-top:hover { transform: translateY(-5px); background: #387c68; box-shadow: 0 8px 18px rgba(56,124,104,0.4); }
+
+    .fold-nav { position: fixed; top: 120px; right: 36px; z-index: 99; opacity: 0; pointer-events: none; transform: translateY(-20px); transition: opacity 0.4s ease, transform 0.4s ease; }
+    .fold-nav.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
+    .fold-nav .btn { width: 56px; height: 56px; border-radius: 50%; background: rgba(255,255,255,0.4); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: bold; font-size: 16px; color: #222; box-shadow: 0 3px 12px rgba(0,0,0,0.2); transition: 0.3s; }
+    .fold-nav .btn:hover { transform: translateY(-3px); background: rgba(255,255,255,0.8); }
+    .fold-nav .menu { position: absolute; top: 64px; right: 8px; display: flex; flex-direction: column; gap: 10px; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: 0.3s; }
+    .fold-nav:hover .menu, .fold-nav.menu-open .menu { opacity: 1; visibility: visible; transform: translateY(0); }
+    .fold-nav .menu a { text-decoration: none; color: #222; padding: 10px 14px; font-size: 15px; font-weight: bold; background: rgba(255,255,255,0.4); backdrop-filter: blur(10px); border-radius: 10px; text-align: center; white-space: nowrap; box-shadow: 0 2px 8px rgba(0,0,0,0.12); transition: 0.3s; }
+    .fold-nav .menu a.active { font-weight: bold; }
+    .fold-nav .menu a.active[data-city="sh"] { color: #c86877; }
+    .fold-nav .menu a.active[data-city="sz"] { color: #0a6ebd; }
+    .fold-nav .menu a.active[data-city="gz"] { color: #7f3f98; }
+    .fold-nav .menu a.active[data-city="cd"] { color: #d4a017; }
+    .fold-nav .menu a.active[data-city="hz"] { color: #12a05c; }
+    .fold-nav .menu a[data-city="index"]:hover { color: #2563eb; }
+    .fold-nav .menu a[data-city="sh"]:hover { color: #c81d2f; }
+    .fold-nav .menu a[data-city="sz"]:hover { color: #002cbd; }
+    .fold-nav .menu a[data-city="gz"]:hover { color: #872f98; }
+    .fold-nav .menu a[data-city="cd"]:hover { color: #d4be18; }
+    .fold-nav .menu a[data-city="hz"]:hover { color: #09aa3c; }
+    .fold-nav .menu a.active { color: #7f3f98; font-weight: bold; }
+
+    /* ========= 手机端适配 (紧凑版 + 修复分割线) ========= */
+    @media (max-width: 768px) {
+        html, body{ overflow-x: hidden; }
+        body{ padding-top: 100px; padding-left: 0; padding-right: 0; padding-bottom: 20px; }
+        .header-fixed{ width: 92%; left: 50%; transform: translateX(-50%); top: 12px; border-radius: 14px; padding: 12px 14px; }
+        .back-btn { display: none; }
+        .back-mobile { display: none !important; }
+        
+        h1{ font-size: 16px; line-height: 1.35; margin-bottom: 6px; }
+        .subtitle{ font-size: 12px; line-height: 1.3; }
+        .content-wrap{ width: 92%; margin: 0 auto; padding: 0; }
+
+        .compare-card:hover, .scene-card:hover, .life-block:hover { transform: none !important; box-shadow: none !important; }
+
+        .video-text-row { grid-template-columns: 1fr; gap: 15px; }
+        .video-wrap { padding: 20px 15px; margin-bottom: 25px; }
+        .video-wrap h3 { font-size: 18px; margin-bottom: 15px; }
+        .video-desc { font-size: 13px; line-height: 1.6; }
+
+        .compare-grid { grid-template-columns: 1fr; gap: 15px; margin-bottom: 25px; }
+        .compare-card { padding: 20px 15px; }
+        .compare-card h2 { font-size: 18px; margin-bottom: 10px; }
+        .compare-card p { font-size: 13px; line-height: 1.6; }
+        .tag { font-size: 12px; padding: 4px 10px; }
+
+        .scene-grid { grid-template-columns: 1fr; gap: 15px; margin-bottom: 25px; }
+        .scene-card { padding: 20px 15px; }
+        .scene-card h4 { font-size: 18px; margin-bottom: 8px; }
+        .scene-card p { font-size: 13px; line-height: 1.6; }
+        .scene-card .num { font-size: 12px; padding: 3px 8px; margin-bottom: 8px; }
+
+        .section-title, .img-gallery-title, .life-block h3, .bottom-bar h3 { font-size: 18px; margin-bottom: 8px; }
+        .section-sub { font-size: 13px; margin-bottom: 20px; }
+
+        /* 【修复】手机端对称分割线 */
+        .river-text {
+            font-size: 14px;
+            margin: 30px 0; 
+            display: flex;  
+            align-items: center;
+            justify-content: center;
+            letter-spacing: 2px;
+            color: #5b3f8f;
+            text-align: center;
+            padding: 0 10px; 
+        }
+        .river-text::before, .river-text::after {
+            content: "";
+            flex: 1; 
+            max-width: 40px; 
+            height: 1px;
+            background: linear-gradient(90deg, #6b4e9e, #387c68);
+            opacity: 0.6;
+            margin: 0 10px; 
+        }
+
+        .img-gallery-wrap { padding: 15px; margin-bottom: 25px; }
+        .carousel-outer { border-width: 4px; }
+
+        .life-block { padding: 20px 15px; margin-bottom: 25px; }
+        .life-text { font-size: 13px; line-height: 1.7; }
+
+        .bottom-bar { padding: 25px 15px; border-radius: 14px; }
+        .bottom-bar p { font-size: 13px; line-height: 1.5; }
+
+        .fold-nav { right: 10px; top: 80px; }
+        .fold-nav .btn { width: 40px; height: 40px; font-size: 13px; }
+        .fold-nav .menu a { padding: 8px 12px; font-size: 14px; }
+
+        .back-top { width: 40px; height: 40px; font-size: 16px; right: 10px; bottom: 20px; }
+    }
+</style>
+</head>
+
+<body>
+<div class="fold-nav" id="foldNav">
+    <div class="btn" id="navBtn">城市</div>
+    <div class="menu">
+        <a href="index.html" data-city="index">首页</a>
+        <a href="shanghai.html" data-city="sh">上海</a>
+        <a href="shenzhen.html" data-city="sz">深圳</a>
+        <a href="guizhou.html" data-city="gz" class="active">贵州</a>
+        <a href="chengdu.html" data-city="cd">成都</a>
+        <a href="hangzhou.html" data-city="hz">杭州</a>
+    </div>
+</div>
+
+<button class="back-mobile" onclick="location.href='index.html'">←</button>
+
+<div class="header-fixed">
+    <div class="header-inner">
+        <button class="back-btn" onclick="location.href='index.html'">← 返回首页</button>
+        <h1>大数据赋能贵州，激活山地数字新动能</h1>
+        <p class="subtitle">算力底座扎根多彩山地，数字科技助力西部发展</p>
+    </div>
+</div>
+
+<div class="content-wrap">
+    <div class="video-wrap">
+        <h3>贵州如何依靠大数据建设数字省份</h3>
+        <div class="video-text-row">
+            <div class="video-box">
+                <video controls src="video/guizhou.mp4">
+                    您的浏览器不支持视频播放
+                </video>
+            </div>
+            <div class="video-desc">
+                贵州依托得天独厚的气候与地理条件，打造国家级算力枢纽。凉爽气候降低服务器散热能耗，喀斯特山体提供安全稳定的机房环境。大数据产业落地贵州，让曾经的山地省份，摇身一变成为全国重要的数据存储与算力调度中心，为各行各业数字化转型提供底层支撑。
+            </div>
+        </div>
+    </div>
+
+    <h2 class="section-title">传统贵州与智慧贵州</h2>
+    <p class="section-sub">从山地省份到数字算力高地</p>
+
+    <div class="compare-grid">
+        <div class="compare-card card-tradition">
+            <h2>传统贵州</h2>
+            <p>喀斯特山水、多彩民族文化，大山孕育独具魅力的西部地域风貌。</p>
+            <p>▪ 多彩民族民俗文化</p>
+            <p>▪ 喀斯特山地地貌</p>
+            <p>▪ 山地特色农耕产业</p>
+            <p>▪ 盘山公路交通出行</p>
+            <p>▪ 原生态文旅资源</p>
+        </div>
+        <div class="compare-card card-smart">
+            <h2>智慧贵州</h2>
+            <p>依托算力资源优势，大数据扎根贵州，推动山地省份数字化转型发展。</p>
+            <p>▪ 算力数据中心集群</p>
+            <p>▪ 贵政通数字政务平台</p>
+            <p>▪ 智慧山地文旅服务</p>
+            <p>▪ 数字农业产业升级</p>
+            <p>▪ 城市大脑基层治理</p>
+            <div class="tag-row">
+                <span class="tag tag-blue">算力枢纽</span>
+                <span class="tag tag-blue">数字政务</span>
+                <span class="tag tag-blue">智慧文旅</span>
+                <span class="tag tag-blue">数字农业</span>
+            </div>
+        </div>
+    </div>
+
+    <p class="river-text">大山为基 · 算力筑梦西部数字高地</p>
+
+    <h2 class="section-title">大数据应用场景</h2>
+    <p class="section-sub">贵州在算力、政务、文旅、农业、医疗、教育推进数字化建设</p>
+
+    <div class="scene-grid">
+        <div class="scene-card">
+            <span class="num">01</span>
+            <h4>算力枢纽</h4>
+            <p>贵州建设数据中心集群，承接全国算力调度，让大山成为数字时代的算力底座。</p>
+        </div>
+        <div class="scene-card green-card">
+            <span class="num">02</span>
+            <h4>数字政务</h4>
+            <p>"贵人智办"等平台推动政务服务线上办理，社保、医保、民生事项跨省通办。</p>
+        </div>
+        <div class="scene-card">
+            <span class="num">03</span>
+            <h4>智慧文旅</h4>
+            <p>整合民族村寨、喀斯特景区资源，实现线上预约、智能导览、客流预警。</p>
+        </div>
+        <div class="scene-card green-card">
+            <span class="num">04</span>
+            <h4>数字农业</h4>
+            <p>物联网监测土壤、湿度和气象数据，指导茶叶、中药材等特色产业科学种植。</p>
+        </div>
+        <div class="scene-card">
+            <span class="num">05</span>
+            <h4>智慧医疗</h4>
+            <p>远程医疗连接城市医院与山区卫生院，让基层群众就近享受优质医疗服务。</p>
+        </div>
+        <div class="scene-card green-card">
+            <span class="num">06</span>
+            <h4>智慧教育</h4>
+            <p>优质课堂同步到山区校园，缩小城乡教育差距，让更多孩子共享数字教育资源。</p>
+        </div>
+    </div>
+
+    <div class="img-gallery-wrap">
+        <h3 class="img-gallery-title">多彩贵州实景</h3>
+        <div class="carousel-container">
+            <div class="carousel-outer">
+                <div class="carousel-window">
+                    <div class="carousel-track" id="carouselTrack">
+                        <div class="carousel-slide" onclick="openModal('img/gz1.jpg')"><img src="img/gz1.jpg" alt="贵州实景" /></div>
+                        <div class="carousel-slide" onclick="openModal('img/gz2.jpg')"><img src="img/gz2.jpg" alt="贵州实景" /></div>
+                        <div class="carousel-slide" onclick="openModal('img/gz3.jpg')"><img src="img/gz3.jpg" alt="贵州实景" /></div>
+                        <div class="carousel-slide" onclick="openModal('img/gz4.jpg')"><img src="img/gz4.jpg" alt="贵州实景" /></div>
+                        <div class="carousel-slide" onclick="openModal('img/gz5.jpg')"><img src="img/gz5.jpg" alt="贵州实景" /></div>
+                        <div class="carousel-slide" onclick="openModal('img/gz1.jpg')"><img src="img/gz1.jpg" alt="贵州实景" /></div>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-dots" id="carouselDots">
+                <div class="dot active" onclick="goToSlide(0)"></div>
+                <div class="dot" onclick="goToSlide(1)"></div>
+                <div class="dot" onclick="goToSlide(2)"></div>
+                <div class="dot" onclick="goToSlide(3)"></div>
+                <div class="dot" onclick="goToSlide(4)"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="imageModal" onclick="closeModal()">
+        <img id="modalImg" src="" alt="大图" />
+    </div>
+
+    <div class="life-block">
+        <h3>数字技术走进山地百姓生活</h3>
+        <p class="life-text">依托贵州算力底座，数字政务平台"贵人智办"让群众足不出户办理社保、医保、各类民生业务，打通省、市、县、乡多级服务通道。智慧农业借助物联网传感器监测山地农作物土壤、湿度环境，大数据指导茶叶、中药材等特色产业科学种植，拓宽农产品线上销售渠道。智慧文旅平台整合少数民族村寨、喀斯特景区资源，线上预约游览、智能导览，让多彩贵州文化线上传播。远程医疗系统联通偏远山区，城市优质医疗资源下沉，基层群众在家门口就能享受专家问诊。智慧教育缩小城乡教育差距，线上课堂把优质教学资源输送到山区校园。乡村治理依托大数据平台，实现基层事件快速上报处置。大数据把大山与数字时代紧紧相连，不断改善山地群众生产生活，让西部省份跑出数字发展加速度。</p>
+    </div>
+
+    <div class="bottom-bar">
+        <h3>贵州：大山之上崛起数字算力高地</h3>
+        <p>算力、大数据与人工智能扎根贵州，改写山地省份发展模式，赋能民生、产业与社会治理现代化。</p>
+    </div>
+</div>
+
+<div class="back-top" id="backTopBtn">↑</div>
+
+<script>
+    const foldNav = document.querySelector('.fold-nav');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 60) { foldNav.classList.add('show'); } else { foldNav.classList.remove('show'); foldNav.classList.remove('menu-open'); }
+    });
+
+    const navBtn = document.getElementById('navBtn');
+    navBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        foldNav.classList.toggle('menu-open');
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!foldNav.contains(e.target)) { foldNav.classList.remove('menu-open'); }
+    });
+
+    const backTopBtn = document.getElementById('backTopBtn');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) { backTopBtn.classList.add('show'); } else { backTopBtn.classList.remove('show'); }
+    });
+    backTopBtn.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+
+    // 轮播
+    const track = document.getElementById('carouselTrack');
+    const dots = document.querySelectorAll('.carousel-dots .dot');
+    const totalSlides = 5;
+    let currentIndex = 0;
+    let autoPlayTimer = null;
+    const carouselWindow = document.querySelector('.carousel-window');
+
+    function updateDots() {
+        let activeIndex = currentIndex === totalSlides ? 0 : currentIndex;
+        dots.forEach((dot, index) => { dot.classList.toggle('active', index === activeIndex); });
+    }
+
+    function moveTrack() {
+        track.style.transform = `translateX(-${currentIndex * 100}%)`;
+        updateDots();
+    }
+
+    function nextSlide() {
+        currentIndex++;
+        moveTrack();
+        if (currentIndex === totalSlides) {
+            setTimeout(() => {
+                track.style.transition = 'none';
+                currentIndex = 0;
+                track.style.transform = `translateX(0)`;
+                setTimeout(() => { track.style.transition = 'transform 0.6s ease-in-out'; }, 50);
+            }, 600);
+        }
+    }
+
+    function goToSlide(index) {
+        currentIndex = index;
+        track.style.transition = 'transform 0.6s ease-in-out';
+        moveTrack();
+    }
+
+    function startAutoPlay() {
+        stopAutoPlay();
+        autoPlayTimer = setInterval(nextSlide, 3000);
+    }
+
+    function stopAutoPlay() {
+        if (autoPlayTimer) { clearInterval(autoPlayTimer); }
+    }
+
+    carouselWindow.addEventListener('mouseenter', stopAutoPlay);
+    carouselWindow.addEventListener('mouseleave', startAutoPlay);
+
+    document.querySelectorAll('.carousel-slide').forEach((slide) => {
+        slide.addEventListener('click', () => { stopAutoPlay(); });
+    });
+
+    startAutoPlay();
+
+    function openModal(src) {
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImg');
+        modal.style.display = 'flex';
+        modalImg.src = src;
+        stopAutoPlay();
+    }
+
+    function closeModal() {
+        document.getElementById('imageModal').style.display = 'none';
+        startAutoPlay();
+    }
+</script>
+</body>
+</html>

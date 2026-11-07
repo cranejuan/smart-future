@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>大数据赋能上海，点亮智慧都市</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Microsoft YaHei",sans-serif; }
+        
+        /* 统一背景，关键：强制禁止横向溢出 */
+        html, body {
+            overflow-x: hidden !important; 
+        }
+        
+        body {
+            background-color: #f8f5ec;
+            padding-top: 160px; padding-left: 20px; padding-right: 20px; padding-bottom: 40px;
+            background-image: url("img/shbjt.jpg");
+            background-size: cover; background-repeat: no-repeat; background-position: center; background-attachment: fixed;
+            position: relative;
+            z-index: 1;
+        }
+        body::before{ 
+            content: ""; 
+            position: fixed; 
+            inset: 0; 
+            background: rgba(248, 245, 236, 0.78); 
+            z-index: -1; 
+            pointer-events: none; 
+        }
+
+        .header-fixed{ position: fixed; top: 0; left: 0; width: 100%; background-color: #f8f5ec; padding: 20px 20px 12px; z-index: 999; border-bottom: 1px solid #914E43; }
+        .header-inner{ max-width: 1100px; margin: 0 auto; text-align: center; position: relative; }
+        .back-btn{ position: absolute; top: 5px; left: 20px; background-color: #304b8c; color: #fff; border: none; padding: 7px 14px; border-radius: 5px; font-size: 13px; cursor: pointer; transition: all 0.3s ease; }
+        .back-btn:hover{ background:#914E43; transform: translateY(-2px); }
+        h1{ font-size: 30px; color: #914E43; margin-bottom: 10px; }
+        .subtitle{ font-size: 15px; color: #555; margin-bottom: 0; }
+        .content-wrap{ max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+
+        /* =========================================================
+           桌面端双栏排版与对比卡片悬停效果（分开悬停）
+           ========================================================= */
+        .two-col{ 
+            display: flex; 
+            border-radius: 20px; 
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08); 
+            margin-bottom: 40px; 
+            background:#fff; 
+            position: relative; 
+        }
+        
+        /* 左右卡片各自的悬停效果 */
+        .col-left, .col-right {
+            width: 50%; 
+            padding: 36px 32px; 
+            position: relative; 
+            z-index: 2; 
+            transition: all 0.35s ease; 
+        }
+        .col-left { background-color: #faf3f1; border-radius: 20px 0 0 20px; }
+        .col-right { background-color: #f0f3fa; border-radius: 0 20px 20px 0; }
+
+        .col-left:hover, .col-right:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 28px rgba(145,78,67,0.15);
+            z-index: 3;
+        }
+        
+        .col-left h2{ color: #914E43; margin-bottom: 20px; font-size: 28px; display:flex; align-items:center; gap:12px; }
+        .col-right h2{ color: #304b8c; margin-bottom: 20px; font-size: 28px; display:flex; align-items:center; gap:12px; }
+        .col-left h2::before{ content:""; display:inline-block; width:6px; height:26px; border-radius:3px; background:#914E43; }
+        .col-right h2::before{ content:""; display:inline-block; width:6px; height:26px; border-radius:3px; background:#304b8c; }
+        
+        .intro-text{ color: #444; font-size: 17px; line-height: 1.7; margin-bottom: 20px; }
+        .list-item{ color: #444; font-size: 16px; line-height: 2; }
+
+        /* =========================================================
+           电脑端图片（默认静止，悬停时微小平移摆动）
+           ========================================================= */
+        .deco-img {
+            position: absolute;
+            width: 220px; 
+            height: auto;
+            display: block;
+            filter: drop-shadow(0 12px 16px rgba(0,0,0,0.35));
+            transition: transform 0.3s ease, filter 0.3s ease;
+            cursor: pointer;
+            z-index: 20;
+        }
+        
+        .img-wtjz { left: 32%; top: 60%; transform: translate(-50%, -20%); }
+        .img-dfmz { left: 94%; top: 55%; transform: translate(-50%, -40%); }
+        
+        /* 极小幅度悬停动效 */
+        .img-wtjz:hover { 
+            transform: translate(-50%, -20%) rotate(1deg) scale(1.02); 
+            filter: drop-shadow(0 15px 20px rgba(0,0,0,0.45)); 
+        }
+        .img-dfmz:hover { 
+            transform: translate(-50%, -40%) rotate(-1deg) scale(1.02); 
+            filter: drop-shadow(0 15px 20px rgba(0,0,0,0.45)); 
+        }
+
+        .video-wrap, .timeline-block, .life-block{ background: #ffffff; padding: 36px; border-radius: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); margin-bottom: 45px; border:1px solid #f0ebe2; transition: all 0.35s ease; }
+        .video-wrap:hover, .timeline-block:hover, .life-block:hover{ transform: translateY(-4px); box-shadow: 0 14px 32px rgba(145,78,67,0.15); }
+        .video-wrap h3{ text-align: center; color: #914E43; font-size: 26px; margin-bottom: 22px; }
+        video{ width: 100%; border-radius: 12px; }
+        
+        .scene-title{ text-align: center; color: #914E43; font-size: 28px; margin-bottom: 12px; }
+        .scene-sub{ text-align: center; color: #555; font-size: 17px; margin-bottom: 40px; }
+        
+        .circle-container{ display: flex; justify-content: space-between; gap: 18px; margin-bottom: 50px; flex-wrap: wrap; }
+        .circle-item{ text-align: center; flex: 1; min-width: 140px; }
+        .circle{ width: 160px; height: 160px; border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,0.12); margin:0 auto 14px; overflow: hidden; background-color: #f3f3f3; transition: transform 0.3s ease; border:4px solid #fff; }
+        .circle:hover{ transform: scale(1.12); }
+        .circle img{ width:100%; height:100%; object-fit:cover; }
+        .circle-name{ font-size: 17px; color: #444; font-weight:600; }
+
+        .timeline-block h3{ text-align:center; color:#914E43; font-size:24px; margin-bottom:24px; }
+        .slider-wrap { position: relative; width: 100%; height: 8px; border-radius: 4px; background: #f0ebe2; }
+        #yearSlider{ width:100%; height:32px; opacity:0; position:absolute; top:0; left:0; z-index:10; }
+        .timeline-track { position: absolute; left: 0; top: 0; width: 0%; height: 8px; border-radius: 4px; background: linear-gradient(90deg, #914E43, #b5a57a, #8fb3d6, #304b8c); transition: width 0.1s linear; }
+        .timeline-thumb { position: absolute; top: 50%; width: 22px; height: 22px; border-radius: 50%; background: #ffffff; border: 3px solid #914E43; box-shadow: 0 2px 8px rgba(0,0,0,0.2); transform: translate(-50%, -50%); pointer-events: none; transition: left 0.1s linear; }
+        .year-mark{ display:flex; justify-content:space-between; position: relative; top: 20px; color:#777; font-size:14px; }
+        .timeline-text{ margin-top:40px; font-size:17px; line-height:1.8; color:#444; min-height:80px; background:#faf7f2; padding:20px 24px; border-radius:12px; }
+        .life-block h3{ text-align: center; color: #914E43; font-size: 24px; margin-bottom: 20px; }
+        
+        .bottom-bar{ background: linear-gradient(90deg,#914E43,#304b8c); border-radius: 20px; padding: 36px; text-align: center; color: #ffffff; position: relative; }
+        .bottom-bar h3{ font-size: 24px; margin-bottom: 12px; }
+        .bottom-bar p{ font-size: 18px; opacity:0.92; line-height:1.7; }
+
+        html{ scroll-behavior: smooth; }
+        .case-carousel { position: relative; margin-top: 24px; }
+        .case-track { position: relative; width: 100%; min-height: 420px; border-radius: 16px; background: #faf7f2; padding: 16px; overflow: hidden; }
+        .case-item { position: absolute; top: 16px; left: 16px; right: 16px; bottom: 16px; padding: 36px 44px; opacity: 0; transform: translateX(30px); transition: all 0.4s ease; pointer-events: none; overflow-y: auto; }
+        .case-item.active { opacity: 1; transform: translateX(0); pointer-events: auto; }
+        .case-item h4 { font-size: 21px; color: #914E43; margin: 0 0 8px; }
+        .case-item h5 { font-size: 16px; color: #304b8c; margin: 0 0 24px; font-weight: 600; }
+        .case-item p { font-size: 16px; color: #333; line-height: 1.9; margin-bottom: 16px; text-align: justify; }
+        .case-dots { display: flex; justify-content: flex-start; gap: 12px; margin-top: 24px; padding-left: 16px; }
+        .case-dot { width: 12px; height: 12px; border-radius: 50%; background: #d8cfc0; cursor: pointer; transition: all 0.3s; }
+        .case-dot.active { background: #914E43; width:32px; border-radius:6px; }
+
+        /* 城市导航 */
+        .fold-nav { position: fixed; top: 120px; right: 36px; z-index: 99; opacity: 0; pointer-events: none; transform: translateY(-20px); transition: opacity 0.4s ease, transform 0.4s ease; }
+        .fold-nav.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
+        .fold-nav .btn { width:56px; height:56px; border-radius:50%; background:rgba(255,255,255,0.55); backdrop-filter: blur(10px); display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:bold; font-size:16px; color:#222; box-shadow:0 3px 12px rgba(0,0,0,0.2); transition:0.3s; }
+        .fold-nav .btn:hover{ transform: translateY(-3px); background:rgba(255,255,255,0.85); }
+        .fold-nav .menu { position:absolute; top:64px; right:8px; display:flex; flex-direction: column; gap:10px; opacity:0; visibility:hidden; transform: translateY(-10px); transition:0.3s; }
+        .fold-nav:hover .menu, .fold-nav.menu-open .menu { opacity:1; visibility:visible; transform: translateY(0); }
+        .fold-nav .menu a{ text-decoration:none; color:#222; padding:10px 14px; font-size:15px; font-weight:bold; background:rgba(255,255,255,0.55); backdrop-filter: blur(10px); border-radius:10px; text-align:center; white-space:nowrap; box-shadow:0 2px 8px rgba(0,0,0,0.12); transition:0.3s; }
+        .fold-nav .menu a.active[data-city="sh"]{ color:#914E43; }
+
+        /* 返回顶部（最高优先级防丢失） */
+        .back-top {
+            position: fixed;
+            right: 30px;
+            bottom: 30px;
+            width: 52px;
+            height: 52px;
+            background: #914E43;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 4px 14px rgba(145,78,67,0.35);
+            cursor: pointer;
+            transition: 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            z-index: 99998 !important;
+        }
+        .back-top.show {
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+        .back-top:hover {
+            transform: translateY(-5px);
+            background: #304b8c;
+        }
+        
+        /* 手机端适配 */
+        @media (max-width:768px){
+            body{ padding-top: 100px; padding-left: 0; padding-right: 0; padding-bottom: 20px; }
+            .header-fixed{ width: 92%; left: 50%; transform: translateX(-50%); top: 12px; border-radius: 14px; padding: 12px 14px; }
+            .back-btn { display: none; }
+            h1{ font-size: 16px; margin-bottom: 6px; }
+            .subtitle{ font-size: 12px; }
+            .content-wrap{ width: 92%; margin: 0 auto; padding: 0; }
+
+            .two-col:hover, .col-left:hover, .col-right:hover, .video-wrap:hover, .timeline-block:hover, .life-block:hover, .deco-img:hover { 
+                transform: none !important; 
+                box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important; 
+            }
+
+            .two-col { flex-direction: column; border-radius: 0; box-shadow: none; background: transparent; margin-bottom: 25px; gap: 15px; overflow: visible; }
+            .col-left, .col-right { width: 100%; padding: 20px 15px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+            .col-left { background-color: #faf3f1; border-radius: 12px; }
+            .col-right { background-color: #f0f3fa; border-radius: 12px; }
+            .col-left h2, .col-right h2{ font-size: 18px; margin-bottom: 8px; }
+            .intro-text{ font-size: 13px; margin-bottom: 8px; line-height: 1.5; }
+            .list-item{ font-size: 12px; line-height: 1.6; }
+            
+            .two-col img.deco-img { 
+                display: none !important;
+            }
+
+            iframe { height: 110px !important; margin-bottom: 15px !important; margin-top: 10px !important; border-radius: 8px; }
+
+            .video-wrap, .timeline-block, .life-block { padding: 20px 15px; margin-bottom: 25px; border-radius: 14px; }
+            .video-wrap h3, .life-block h3{ font-size: 18px; margin-bottom: 15px; }
+            .scene-title{ font-size: 18px; margin-bottom: 8px; }
+            .scene-sub{ font-size: 13px; margin-bottom: 20px; }
+
+            .circle-container{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px 10px; margin-bottom: 20px; }
+            .circle-item{ min-width: auto; flex: none; }
+            .circle{ width: 70px; height: 70px; margin: 0 auto 8px; border-width: 2px; }
+            .circle-name{ font-size: 13px; }
+
+            .timeline-block h3{ font-size: 18px; margin-bottom: 20px; }
+            .year-mark{ font-size: 12px; }
+            .timeline-text{ font-size: 14px; padding: 15px; margin-top: 30px; line-height: 1.6; }
+
+            .case-carousel{ margin-top: 15px; }
+            .case-track{ min-height: 380px; padding: 10px; border-radius: 12px; }
+            .case-item{ top: 10px; left: 10px; right: 10px; bottom: 10px; padding: 15px; }
+            .case-item h4 { font-size: 16px; }
+            .case-item h5 { font-size: 13px; margin-bottom: 15px; }
+            .case-item p { font-size: 14px; line-height: 1.7; margin-bottom: 12px; }
+            .case-dots{ justify-content: center; padding-left: 0; margin-top: 15px; }
+
+            .bottom-bar { padding: 20px 15px; border-radius: 14px; }
+            .bottom-bar h3{ font-size: 16px; margin-bottom: 8px; }
+            .bottom-bar p{ font-size: 13px; line-height: 1.5; }
+            
+            .fold-nav { right: 10px; top: 80px; }
+            .fold-nav .btn { width: 40px; height: 40px; font-size: 13px; }
+
+            .back-top {
+                display: flex !important;
+                position: fixed !important;
+                width: 44px !important;
+                height: 44px !important;
+                font-size: 18px !important;
+                right: 16px !important;
+                bottom: 25px !important; 
+                z-index: 99999 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="fold-nav" id="foldNav">
+        <div class="btn" id="navBtn">城市</div>
+        <div class="menu">
+            <a href="index.html" data-city="index">首页</a>
+            <a href="shanghai.html" data-city="sh" class="active">上海</a>
+            <a href="shenzhen.html" data-city="sz">深圳</a>
+            <a href="guizhou.html" data-city="gz">贵州</a>
+            <a href="chengdu.html" data-city="cd">成都</a>
+            <a href="hangzhou.html" data-city="hz">杭州</a>
+        </div>
+    </div>
+
+    <div class="header-fixed">
+        <div class="header-inner">
+            <button class="back-btn" onclick="location.href='index.html'">← 返回首页</button>
+            <h1>大数据赋能上海，点亮智慧都市</h1>
+            <p class="subtitle">AI与大数据技术融合海派底蕴，重塑城市面貌</p>
+        </div>
+    </div>
+    
+    <div class="content-wrap">
+      <div class="two-col">
+        <div class="col-left">
+          <h2>传统上海</h2>
+          <p class="intro-text">石库门、外滩、老弄堂与烟火气，构成了上海深厚的城市记忆</p>
+          <div style="margin-top:10px;">
+            <p class="list-item">▪ 石库门里弄生活</p>
+            <p class="list-item">▪ 外滩历史建筑</p>
+            <p class="list-item">▪ 传统商业街区</p>
+            <p class="list-item">▪ 公交与地铁通勤</p>
+            <p class="list-item">▪ 老字号城市文化</p>
+          </div>
+        </div>
+        <div class="col-right">
+          <h2>智慧上海</h2>
+          <p class="intro-text">大数据、人工智能和物联网，让上海从传统城市转向智能</p>
+          <p class="list-item">▪ 智慧交通调度</p>
+          <p class="list-item">▪ 城市大脑治理</p>
+          <p class="list-item">▪ 数字便民服务</p>
+          <p class="list-item">▪ 金融与科创升级</p>
+          <p class="list-item">▪ 无人机与智能设施</p>
+        </div>
+        <img src="img/wtjz.png" class="deco-img img-wtjz" alt="外滩建筑">
+        <img src="img/dfmz.png" class="deco-img img-dfmz" alt="东方明珠">
+      </div>
+      
+      <iframe src="su.html" scrolling="no" style="width:100%; height:180px; border:none; overflow:hidden; background:transparent; display:block; margin-bottom:30px;" allowtransparency="true"></iframe>
+
+      <div class="video-wrap">
+        <h3>上海如何利用大数据建设智慧城市</h3>
+        <video controls style="width:100%; max-height:500px; border-radius:12px;object-fit:cover;">
+            <source src="video/shanghai.mp4" type="video/mp4">您的浏览器不支持视频播放
+        </video>
+      </div>
+      
+      <h2 class="scene-title">大数据应用场景</h2>
+      <p class="scene-sub">上海在交通、治理、生活、产业、医疗、教育等领域推进数字化建设</p>
+      
+      <div class="circle-container">
+          <div class="circle-item"><div class="circle"><img src="img/jt.jpg" alt="智慧交通"></div><p class="circle-name">智慧交通</p></div>
+          <div class="circle-item"><div class="circle"><img src="img/cs.jpg" alt="城市治理"></div><p class="circle-name">城市治理</p></div>
+          <div class="circle-item"><div class="circle"><img src="img/shenghuo.jpg" alt="数字生活"></div><p class="circle-name">数字生活</p></div>
+          <div class="circle-item"><div class="circle"><img src="img/sj.jpg" alt="产业升级"></div><p class="circle-name">产业升级</p></div>
+          <div class="circle-item"><div class="circle"><img src="img/yliao.jpg" alt="智慧医疗"></div><p class="circle-name">智慧医疗</p></div>
+          <div class="circle-item"><div class="circle"><img src="img/jy.jpg" alt="智慧教育"></div><p class="circle-name">智慧教育</p></div>
+      </div>
+      
+      <div class="timeline-block">
+          <h3>上海数字化发展时间演变</h3>
+          <div class="slider-wrap">
+              <input type="range" id="yearSlider" min="0" max="4" value="0">
+              <div class="timeline-track" id="timelineTrack"></div>
+              <div class="timeline-thumb" id="timelineThumb"></div>
+              <div class="year-mark"><span>2000</span><span>2010</span><span>2016</span><span>2020</span><span>2026</span></div>
+          </div>
+          <div class="timeline-text" id="timelineText"></div>
+      </div>
+      
+      <div class="life-block">
+          <h3>数字技术走进日常百姓生活</h3>
+          <div class="case-carousel">
+              <div class="case-track" id="caseTrack">
+                  <div class="case-item active">
+                      <h4>幽门螺杆菌数据空间</h4>
+                      <h5>上海数据交易所</h5>
+                      <p>在中国人的健康检测中，幽门螺杆菌感染比例高企，耐药性与病变风险日益加剧。</p>
+                      <p>作为国内首个行业数据空间，由上海数据交易所等牵头组织的幽门螺杆菌数据空间，把医疗机构、科研机构、企业等多维度数据汇聚起来，降低幽门螺杆菌试剂盒研发成本，提高医疗器械证的获批率。</p>
+                      <p>和一般的数据产品不同，数据空间从需求方的视角出发，更加贴近应用场景。企业提出需求后，数据空间会直接响应企业需求，提供的数据更有针对性。同时，数据空间会对数据进行精细化的画像与标识处理，流通的是数据标识，而非数据本身，让数据"可用不可看"，既打破数据壁垒，又构建一个可信可控、互联互通、价值共创的数据空间生态系统。</p>
+                  </div>
+                  <div class="case-item">
+                      <h4>碰一下</h4>
+                      <h5>支付宝</h5>
+                      <p>从2024年起，从上海到全国百城的居民，都被"碰一下"包围。</p>
+                      <p>在足够简单的"扫一扫"面前，"碰一下"竟然还能更简单。只需解锁手机、碰一下商家设备、直接支付。不用满手机找付款码，对老年人、视障人士更为方便。老年人说："像'滴'老年卡一样简单。"</p>
+                      <p>除了支付以外，"碰一下"还能点餐、入会、验票、租充电宝、开智能货柜甚至开门等。"碰一下"最先普及的场景或许是点餐，目前全国已有10万家餐厅接入，包括华莱士、吉祥馄饨、德克士等连锁品牌餐厅。年轻人说："点餐不用排队真好！"</p>
+                      <p>当商家们希望吸引更多年轻人和未来目标群体来商场时，支付便利性绝对是一大考量因素。在上海静安大悦城首批接入的200家商户中，"碰一下"覆盖率达92%，一碰搞定支付、入会、营销"三连"。</p>
+                  </div>
+                  <div class="case-item">
+                      <h4>徐汇区政务服务大模型</h4>
+                      <h5>徐汇区行政服务中心</h5>
+                      <p>作为上海首个落地应用的政务服务大模型，在徐汇区行政服务中心上线的"徐汇区政务服务大模型"成了法人事项受理综合受理大厅18位窗口工作人员的"AI军师"。</p>
+                      <p>这款政务大模型汇聚39个涉企事项数据集、超过500个体系化知识点和2300多条高频咨询语料，能实现10轮以上自然语言问答，对高频事项的咨询准确率超过90%。对于窗口工作人员来说，它就像一位"查找员"，不仅能辅助完成烦琐的查找条例任务，还能识别不少口语化问题。</p>
+                      <p>值得一提的是，大模型拥有动态学习能力，对于正确答案，大模型会加深确认，对错误答案，大模型会将正确答案加入知识库中重新学习。</p>
+                      <p>政务大模型还是一位"带教老师"，让原本需要6个月的新员工培训，缩短了至少2个月，大大压缩了培训成本和培训压力。</p>
+                  </div>
+                  <div class="case-item">
+                      <h4>5G确定性网络在智能制造中的应用</h4>
+                      <h5>宝钢股份&上海电信</h5>
+                      <p>得益于上海电信联合宝钢股份厚板事业部等打造的"5G确定性网络在智能制造中的应用"项目，宝钢这个"钢铁巨人"和新技术碰撞出了火花。</p>
+                      <p>基于5G专网，宝钢缩短生产线建设或改造的工程周期；减少设备维护员工的日常电缆巡检次数，特别是在安全风险较高区域的日常巡检中，能从根本上改善生产劳动安全状况……</p>
+                      <p>除了5G，AI也在5G低时延、高带宽的无线网络底座上大显身手。轮廓检测设备的高分辨率相机将轧后钢板的图像进行实时采集，结合AI图像拼接和边缘检测算法提取钢板轮廓信息，最终得到生产所需的轮廓特征因子，同时对后续钢板的在线剪切提供指导意见。借助AI自适应功能，其可持续对算法进行优化迭代，以提升决策精度。</p>
+                  </div>
+                  <div class="case-item">
+                      <h4>电动自行车智能充换电</h4>
+                      <h5>上海铁塔</h5>
+                      <p>作为全国电动车保有量最多的城市之一，上海正在进行一场两轮电动车充换电的智能升级。于是，上海街头出现电动自行车共享充电桩，比如网红地标武康大楼附近的小区里装上了更集约的智能充电柜，因为方便，居民不再将蓄电池拿回家中充电。这些共享充电桩、充电柜还实现了与城运中心数据实时对接，及时告警避免火灾发生，在广灵一村就成功阻拦了一起蓄电池自燃事故。</p>
+                      <p>在上海近10万个充电端口背后，都是上海铁塔，他们已经累计服务居民超50万人。</p>
+                      <p>除了社区居民外，外卖和快递骑手更是电动自行车的重度用户。智能换电柜以15秒的超快换电能力，赢得了骑手们的青睐。上海铁塔现已部署低速电动车换电网点超3000个，覆盖上海全市，累计为超20万名外卖骑手、快递小哥"续电"。</p>
+                  </div>
+              </div>
+          </div>
+          <div class="case-dots">
+              <span class="case-dot active" onclick="goCase(0)"></span>
+              <span class="case-dot" onclick="goCase(1)"></span>
+              <span class="case-dot" onclick="goCase(2)"></span>
+              <span class="case-dot" onclick="goCase(3)"></span>
+              <span class="case-dot" onclick="goCase(4)"></span>
+          </div>
+      </div>
+      
+      <div class="bottom-bar">
+          <h3>上海：传统城市迈向数字未来</h3>
+          <p>大数据、人工智能和物联网正在重塑上海的城市管理方式，也让市民生活变得更加便捷、安全和高效。</p>
+      </div>
+    </div>
+    
+    <div class="back-top">↑</div>
+    
+    <script>
+        const nav = document.querySelector('.fold-nav');
+        window.addEventListener('scroll',()=>{
+            if(window.scrollY > 80){ nav.classList.add('show'); }else{ nav.classList.remove('show'); nav.classList.remove('menu-open'); }
+        })
+        const navBtn = document.getElementById('navBtn');
+        navBtn.addEventListener('click', (e) => { e.stopPropagation(); nav.classList.toggle('menu-open'); });
+        document.addEventListener('click', (e) => { if (!nav.contains(e.target)) { nav.classList.remove('menu-open'); } });
+
+        const slider = document.getElementById('yearSlider');
+        const track = document.getElementById('timelineTrack');
+        const thumb = document.getElementById('timelineThumb');
+        const textDom = document.getElementById('timelineText');
+        const contentList = [
+            `<b>2000年：信息化起步阶段</b><br>上海开启基础信息化建设，政务以单机电脑办公为主，数据分散独立，城市数字化处于萌芽期。开始铺设基础通信网络，部分机关单位引入电脑替代纸质台账；市民信箱等早期线上政务雏形开始酝酿，信息产业初步成长，但各部门系统互不连通，数据孤岛现象普遍。`,
+            `<b>2010年：智慧城市启动阶段</b><br>上海正式提出"创建面向未来的智慧城市"战略，智慧城市建设全面启动。启动城市光网、无线城市建设，大力推进光纤宽带网络落地；出台首轮智慧城市三年行动计划，电子政务从单机走向局域网互联，信息化开始渗透交通、医疗、社区民生领域，为后续数字化打下网络底座。`,
+            `<b>2016年：智慧城市深化阶段</b><br>发布智慧城市建设"十三五"规划，城市信息化从基础设施建设转向场景深化应用。政务开始探索跨部门数据共享，城市管理、公共服务信息化应用持续扩容；大数据技术逐步落地，部分区域试点城市管理数字化平台，数字产业快速壮大，民生线上服务渠道不断丰富，数字化由"建网络"转向"用数据"。`,
+            `<b>2020年：城市数字化转型全面开启阶段</b><br>上海率先在全国系统性提出城市数字化转型，聚焦经济、生活、治理三大领域。成立市城市运行管理中心，"一网通办""一网统管"两大核心工程加速落地；政务服务全面线上化，城市大脑体系成型，5G网络规模化部署，数字经济、数字生活场景大规模普及，从单一智慧城市升级为全域城市数字化转型。`,
+            `<b>2026年：国际数字之都建设阶段</b><br>上海持续深化城市数字化转型，全力建设国际数字之都。人工智能、区块链、物联网等新技术深度融入城市运行；公共数据体系更加完善，数字底座能力持续升级；数字赋能产业创新、基层治理、民生服务，兼顾数字安全与普惠，打造世界级城市数字化标杆。`
+        ];
+        const thumbColorList = ['#914E43','#914E43','#b5a57a','#5f7ab5','#304b8c'];
+        function updateTimeline() {
+            const val = slider.value;
+            const percent = (val / 4) * 100;
+            track.style.width = percent + '%';
+            thumb.style.left = percent + '%';
+            thumb.style.borderColor = thumbColorList[val];
+            textDom.innerHTML = contentList[val];
+        }
+        slider.oninput = updateTimeline;
+        updateTimeline();
+
+        const caseItems = document.querySelectorAll('.case-item');
+        const caseDots = document.querySelectorAll('.case-dot');
+        let currentCase = 0;
+        let timer = null;
+        const interval = 5000;
+        function renderCase() {
+            caseItems.forEach((item, i) => { item.classList.toggle('active', i === currentCase); });
+            caseDots.forEach((dot, i) => { dot.classList.toggle('active', i === currentCase); });
+            caseItems[currentCase].scrollTop = 0;
+        }
+        function switchCase(dir) { currentCase = (currentCase + dir + caseItems.length) % caseItems.length; renderCase(); }
+        function goCase(index) { currentCase = index; renderCase(); }
+        function autoPlay() { timer = setTimeout(()=>{ switchCase(1); autoPlay(); }, interval); }
+        function startAuto(){ stopAuto(); autoPlay(); }
+        function stopAuto(){ if(timer){ clearTimeout(timer); timer = null; } }
+        document.querySelector('.case-track')?.addEventListener('mouseenter', stopAuto);
+        document.querySelector('.case-track')?.addEventListener('mouseleave', startAuto);
+        renderCase();
+        startAuto();
+
+        // 终极防丢逻辑：只要向下滚动超过 300px 就显示，回到顶部隐藏
+        const backTopBtn = document.querySelector('.back-top');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backTopBtn.classList.add('show');
+            } else {
+                backTopBtn.classList.remove('show');
+            }
+        });
+        backTopBtn.addEventListener('click', function(){
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>

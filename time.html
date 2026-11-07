@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>时空对比</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background-color: #1a1f3a;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: sans-serif;
+            overflow: hidden;
+            perspective: 1200px;
+        }
+
+        .comparison-container {
+            position: relative;
+            width: 90vw;
+            max-width: 700px; 
+            height: calc(100vh - 40px); 
+            
+            /* 去掉了青色边框和青色发光，只保留一点纯黑色的暗影让卡片有悬浮感 */
+            border: none; 
+            border-radius: 12px; 
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8); 
+            
+            overflow: hidden; 
+            cursor: crosshair; 
+            background: #000; 
+            padding: 0; /* 去掉了内边距，让画面完全贴边 */
+            
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out; 
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.5); 
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 14px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            backdrop-filter: blur(5px); 
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover { background: #fff; color: #000; }
+
+        .inner-box {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: 12px; /* 外框圆角，内部画面也跟着圆角 */
+            overflow: hidden;
+            transform: translateZ(20px); 
+        }
+
+        /* 底层：未来的视频 */
+        .video-future {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; 
+            height: 100%;
+            object-fit: cover; 
+            pointer-events: none; 
+            z-index: 1;
+        }
+
+        /* 顶层：过去的照片 */
+        .past-wrapper {
+            position: absolute;
+            top: 0; left: 0; 
+            width: 50%; 
+            height: 100%;
+            overflow: hidden;
+            z-index: 2;
+            /* 保留中间分割线的一点点暗影，去掉青色的边 */
+            box-shadow: 4px 0 15px rgba(0, 0, 0, 0.6); 
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .img-past {
+            position: absolute;
+            top: 0; left: 0; 
+            /* 尺寸严格对齐外框 */
+            width: calc(90vw); 
+            max-width: 700px;
+            height: calc(100vh - 40px);
+            background-size: cover;
+            background-position: center;
+            background-image: url('img/past.jpg'); 
+        }
+
+        @media screen and (max-width: 768px) {
+            .comparison-container { width: 100vw; max-width: none; height: 100vh; border-radius: 0; }
+            .back-btn { top: 15px; left: 15px; } 
+            .img-past { width: 100vw; max-width: none; height: 100vh; }
+            body { perspective: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="comparison-container" id="comparisonBox">
+        <button class="back-btn" onclick="location.href='index.html'">← 返回</button>
+
+        <div class="inner-box">
+            <!-- 底层：未来视频 -->
+            <video class="video-future" id="futureVideo" autoplay loop muted playsinline webkit-playsinline preload="auto">
+                <source src="video/future.mp4" type="video/mp4">
+            </video>
+            
+            <!-- 顶层：老照片 -->
+            <div class="past-wrapper" id="pastWrapper">
+                <div class="img-past"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const container = document.getElementById('comparisonBox');
+        const pastWrapper = document.getElementById('pastWrapper');
+        const video = document.getElementById('futureVideo');
+
+        video.play().catch(function(error) {
+            video.muted = true;
+            video.play();
+        });
+
+        function updatePosition(position) {
+            const rect = container.getBoundingClientRect();
+            if (position < 0) position = 0;
+            if (position > rect.width) position = rect.width; 
+            pastWrapper.style.width = `${position}px`;
+        }
+
+        container.addEventListener('mousemove', (e) => {
+            const rect = container.getBoundingClientRect();
+            let position = e.clientX - rect.left; 
+            updatePosition(position);
+        });
+
+        container.addEventListener('touchmove', (e) => {
+            const rect = container.getBoundingClientRect();
+            const touch = e.touches[0];
+            let position = touch.clientX - rect.left;
+            updatePosition(position);
+            e.preventDefault();
+        }, { passive: false });
+
+        let initialGamma = null; 
+        document.body.addEventListener('click', function init() {
+            if (video.paused) video.play();
+            
+            if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+                DeviceOrientationEvent.requestPermission().then(permissionState => {
+                    if (permissionState === 'granted') {
+                        window.addEventListener('deviceorientation', handleOrientation);
+                    }
+                }).catch(console.error);
+            } else {
+                window.addEventListener('deviceorientation', handleOrientation);
+            }
+        }, { once: true });
+
+        function handleOrientation(event) {
+            let gamma = event.gamma;
+            if (initialGamma === null) { initialGamma = gamma; return; }
+            let tilt = gamma - initialGamma;
+            if (Math.abs(tilt) < 2) return;
+
+            const rect = container.getBoundingClientRect();
+            let position = (rect.width / 2) + (tilt / 30) * (rect.width / 2);
+            updatePosition(position);
+        }
+
+        document.body.addEventListener('mousemove', (e) => {
+            if(window.innerWidth <= 768) return;
+            const x = e.clientX / window.innerWidth - 0.5;
+            const y = e.clientY / window.innerHeight - 0.5;
+            container.style.transform = `rotateY(${x * 6}deg) rotateX(${-y * 6}deg)`;
+        });
+
+        document.body.addEventListener('mouseleave', () => {
+            container.style.transform = 'rotateY(0deg) rotateX(0deg)';
+        });
+    </script>
+</body>
+</html>

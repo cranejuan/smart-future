@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>大数据赋能成都，数智筑造公园城市</title>
+    <!-- 将 ECharts 的加载放到这里 -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Microsoft YaHei",sans-serif; }
+        html, body { overflow-x: hidden !important; }
+        body {
+            background-color: #f0f7f4;
+            padding-top: 160px; padding-left: 20px; padding-right: 20px; padding-bottom: 40px;
+            background-image: url("img/cdbj.jpg");
+            background-size: 99%; background-repeat: no-repeat; background-position: center; background-attachment: fixed;
+        }
+        body::before { content: ""; position: fixed; inset:0; background: rgba(255,255,255,0.68); z-index:-1; pointer-events:none; }
+        
+        .header-fixed{ position: fixed; top: 0; left: 0; width: 100%; background: linear-gradient(90deg,#d4a850,#2c786c); padding: 20px 20px 12px; z-index: 999; }
+        .header-inner{ max-width: 1100px; margin: 0 auto; text-align: center; position: relative; }
+        .back-btn{ position: absolute; top:5px; left:20px; background-color: #d4a850; color: #fff; border: none; padding: 7px 14px; border-radius: 6px; font-size: 13px; cursor: pointer; transition: all 0.3s ease; }
+        .back-btn:hover{ background-color: #b8862e; transform: translateY(-2px); }
+
+        h1{ font-size: 30px; color: #ffffff; margin-bottom: 10px; font-weight: 600; }
+        .subtitle{ font-size: 15px; color: #ffffff; margin-bottom: 0; letter-spacing: 1px; }
+        .content-wrap{ max-width: 1100px; margin: 0 auto; }
+        
+        .video-wrap{ background: #ffffff; padding: 30px; border-radius:16px; box-shadow: 0 4px 14px #00000010; margin-bottom: 40px; border-top: 4px solid #2c786c; }
+        .video-wrap h3{ text-align: center; color: #2c786c; font-size:26px; margin-bottom:22px; position: relative; }
+        .video-wrap h3::after{ content: ""; display: block; width: 60px; height:3px; background: #d4a850; margin:8px auto 0; border-radius:2px; }
+        .video-box{ width:100%; aspect-ratio:16/9; border-radius:10px; overflow:hidden; background:#000; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .video-box video{ width:100%; height:100%; object-fit:contain; display:block; }
+        
+        .block-item{ padding:32px; border-radius:16px; box-shadow: 0 4px 14px #00000012; margin-bottom:24px; transition: transform 0.3s ease; }
+        .block-item:hover{ transform: translateY(-4px); }
+        .block-old{ background: linear-gradient(135deg,#f5ecd8,#faf5e8); border-left: 5px solid #d4a850; }
+        .block-new{ background: linear-gradient(135deg,#e2edea,#f0f7f4); border-left: 5px solid #2c786c; }
+        .block-item h2{ color:#2c786c; margin-bottom:18px; font-size:26px; display: flex; align-items: center; gap:10px; }
+        .block-old h2{ color:#b8862e; }
+        .block-item h2::before{ content: ""; width: 8px; height:22px; background: #d4a850; border-radius:4px; }
+        .block-new h2::before{ background: #2c786c; }
+        
+        .intro-text{ color:#33524c; font-size:17px; line-height:1.6; margin-bottom:18px; text-indent: 2em; }
+        .list-item{ color:#33524c; font-size:16px; line-height:2; padding-left: 10px; transition: all 0.2s ease; }
+        .list-item:hover{ color: #2c786c; padding-left:15px; }
+        
+        .river-text{ text-align: center; font-size:18px; color: #b8862e; margin:32px 0; font-weight:500; letter-spacing:2px; position: relative; }
+        .river-text::before,.river-text::after{ content: ""; display: inline-block; width: 80px; height:1px; background: #d4a850; opacity:0.4; vertical-align: middle; margin:0 15px; }
+        
+        .chart-section{ background:#fff; border-radius:16px; padding:28px; margin-bottom:30px; box-shadow:0 4px 14px rgba(0,0,0,0.08); border-top:4px solid #2c786c; }
+        .chart-section h3{ text-align:center; font-size:24px; color:#2c786c; margin-bottom:24px; }
+        .chart-two-col{ display:grid; grid-template-columns: 1fr 1fr; gap:24px; }
+        .chart-box{ width: 100%; height: 320px; min-height: 320px; }
+
+        .img-gallery-wrap { padding:30px; background: linear-gradient(135deg,#e8f0e9,#f5f0e0); border-radius:16px; margin-bottom:40px; }
+        .img-gallery-title { text-align:center; font-size:26px; color:#2c786c; margin-bottom:22px; font-weight:600; }
+        .img-gallery { display:grid; grid-template-columns:repeat(2,1fr); grid-auto-rows:240px; gap:18px; }
+        .img-item { background:#d4a850; padding:8px; border-radius:10px; box-shadow:0 4px 12px rgba(212,168,80,0.22); }
+        .img-item img { width:100%; height:100%; object-fit:cover; border-radius:6px; display:block; }
+        
+        .life-block{ padding: 36px 32px; background: #fff; border-radius: 16px; box-shadow: 0 4px 14px #00000010; margin-bottom: 45px; border-top: 4px solid #d4a850; }
+        .life-block h3{ text-align: center; color: #2c786c; font-size: 26px; margin-bottom: 20px; position: relative; }
+        .life-block h3::after{ content: ""; display: block; width: 60px; height: 3px; background: #d4a850; margin: 8px auto 0; border-radius: 2px; }
+        .life-text{ font-size: 18px; color: #33524c; line-height: 1.8; text-align: justify; text-indent: 2em; }
+        
+        .bottom-bar{ background: linear-gradient(90deg,#2c786c,#d4a850); border-radius: 16px; padding: 32px; text-align: center; color: #ffffff; box-shadow: 0 4px 16px rgba(44, 120, 108, 0.25); }
+        .bottom-bar h3{ font-size: 24px; margin-bottom: 12px; font-weight: 600; }
+        .bottom-bar p{ font-size: 17px; opacity: 0.95; line-height: 1.7; }
+
+        .fold-nav { position: fixed; top: 120px; right: 36px; z-index: 99; opacity: 0; pointer-events: none; transform: translateY(-20px); transition: opacity 0.4s ease, transform 0.4s ease; }
+        .fold-nav.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
+        .fold-nav .btn { width:56px; height:56px; border-radius:50%; background:rgba(255,255,255,0.4); backdrop-filter: blur(10px); display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:bold; font-size:16px; color:#222; box-shadow:0 3px 12px rgba(0,0,0,0.2); transition:0.3s; }
+        .fold-nav .btn:hover{ transform: translateY(-3px); background:rgba(255,255,255,0.8); }
+        .fold-nav .menu { position:absolute; top:64px; right:8px; display:flex; flex-direction: column; gap:10px; opacity:0; visibility:hidden; transform: translateY(-10px); transition:0.3s; }
+        .fold-nav:hover .menu, .fold-nav.menu-open .menu { opacity:1; visibility:visible; transform: translateY(0); }
+        .fold-nav .menu a{ text-decoration:none; color:#222; padding:10px 14px; font-size:15px; font-weight:bold; background:rgba(255,255,255,0.4); backdrop-filter: blur(10px); border-radius:10px; text-align:center; white-space:nowrap; box-shadow:0 2px 8px rgba(0,0,0,0.12); transition:0.3s; }
+        
+        .back-top { position: fixed; right: 30px; bottom: 30px; width: 52px; height: 52px; background: #307060; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); cursor: pointer; transition: 0.3s ease; opacity: 0; visibility: hidden; z-index:99998 !important; }
+        .back-top.show{ opacity:1 !important; visibility:visible !important; }
+        .back-top:hover{ transform: translateY(-5px); background:#b89448; }
+
+        @media (max-width:768px){
+            html, body{ overflow-x: hidden; }
+            body{ padding-top: 100px; padding-left: 0; padding-right: 0; padding-bottom: 20px; }
+            .header-fixed{ width: 92%; left: 50%; transform: translateX(-50%); top: 12px; border-radius: 14px; padding: 12px 14px; }
+            .back-btn { display: none; }
+            h1{ font-size: 16px; line-height: 1.35; margin-bottom: 6px; }
+            .subtitle{ font-size: 12px; line-height: 1.3; }
+            .content-wrap{ width: 92%; margin: 0 auto; padding: 0; }
+
+            .block-item:hover, .life-block:hover, .video-wrap:hover, .chart-section:hover { transform: none !important; box-shadow: none !important; }
+
+            .video-wrap { padding: 20px 15px; margin-bottom: 25px; }
+            .video-wrap h3 { font-size: 18px; margin-bottom: 15px; }
+            .block-item { padding: 20px 15px; margin-bottom: 15px; }
+            .block-item h2 { font-size: 18px; margin-bottom: 10px; }
+            .intro-text { font-size: 13px; line-height: 1.6; margin-bottom: 10px; }
+            .list-item { font-size: 13px; line-height: 1.8; padding-left: 5px; }
+            
+            .river-text { font-size: 14px; margin: 25px 0; display: flex; align-items: center; justify-content: center; padding: 0 10px; }
+            .river-text::before, .river-text::after { content: ""; flex: 1; max-width: 30px; height: 1px; background: #d4a850; opacity: 0.6; margin: 0 10px; }
+
+            /* 手机端 ECharts 容器 */
+            .chart-two-col { grid-template-columns: 1fr; gap: 20px; }
+            .chart-section { padding: 15px; margin-bottom: 20px; }
+            .chart-section h3 { font-size: 18px; margin-bottom: 15px; }
+            .chart-box { width: 100% !important; height: 300px !important; min-height: 300px !important; display: block; }
+
+            .img-gallery-wrap { padding: 15px; margin-bottom: 25px; }
+            .img-gallery-title { font-size: 18px; margin-bottom: 15px; }
+            .img-gallery { grid-template-columns: 1fr 1fr; grid-auto-rows: 120px; gap: 10px; }
+            .img-item { padding: 4px; border-radius: 6px; }
+
+            .life-block { padding: 20px 15px; margin-bottom: 25px; }
+            .life-block h3 { font-size: 18px; margin-bottom: 12px; }
+            .life-text { font-size: 13px; line-height: 1.7; }
+
+            .bottom-bar { padding: 20px 15px; border-radius: 14px; }
+            .bottom-bar h3 { font-size: 18px; margin-bottom: 8px; }
+            .bottom-bar p { font-size: 13px; line-height: 1.5; }
+
+            .fold-nav { right: 10px; top: 80px; }
+            .fold-nav .btn { width: 40px; height: 40px; font-size: 13px; }
+            .fold-nav .menu a { padding: 8px 12px; font-size: 14px; }
+            .back-top { width: 44px; height: 44px; font-size: 18px; right: 16px; bottom: 25px; display: flex !important; position: fixed !important; z-index: 99999 !important; }
+        }
+    </style>
+</head>
+<body>
+	<div class="fold-nav" id="foldNav">
+	    <div class="btn" id="navBtn">城市</div>
+	    <div class="menu">
+	        <a href="index.html" data-city="index">首页</a>
+	        <a href="shanghai.html" data-city="sh">上海</a>
+	        <a href="shenzhen.html" data-city="sz">深圳</a>
+	        <a href="guizhou.html" data-city="gz">贵州</a>
+	        <a href="chengdu.html" data-city="cd" class="active">成都</a>
+	        <a href="hangzhou.html" data-city="hz">杭州</a>
+	    </div>
+	</div>
+
+    <div class="header-fixed">
+        <div class="header-inner">
+            <button class="back-btn" onclick="location.href='index.html'">← 返回首页</button>
+            <h1>大数据赋能成都，数智筑造公园城市</h1>
+            <p class="subtitle">智慧蓉城数字底座，让千年蓉城迈向智慧公园都市</p>
+        </div>
+    </div>
+    
+    <div class="content-wrap">
+        <div class="video-wrap">
+            <h3>成都如何建设智慧蓉城公园城市</h3>
+            <div class="video-box">
+                <video controls src="video/chengdu.mp4">您的浏览器不支持视频播放</video>
+            </div>
+        </div>
+        
+        <div class="block-item block-old">
+            <h2>传统成都 · 千年蓉城底蕴</h2>
+            <p class="intro-text">成都自古被誉为"天府之国"，都江堰水利工程滋养川西平原两千余年。宽窄巷子的青砖灰瓦、锦里古街的灯笼酒旗、人民公园的盖碗茶，构成了这座城市独有的安逸烟火气。银杏金黄时节，满城飘飞的金色落叶，是成都人刻在骨子里的浪漫。</p>
+            <p class="list-item">▪ 宽窄巷子、锦里古街留存千年古城烟火</p>
+            <p class="list-item">▪ 都江堰水利工程，天府之国千年水脉</p>
+            <p class="list-item">▪ 盖碗茶、火锅、市井茶馆诠释安逸生活</p>
+            <p class="list-item">▪ 金沙遗址太阳神鸟，古蜀文明熠熠生辉</p>
+            <p class="list-item">▪ 深秋银杏满城金，蓉城四季皆有诗意</p>
+        </div>
+        
+        <div class="block-item block-new">
+            <h2>智慧成都 · 数字公园新城</h2>
+            <p class="intro-text">如今的成都以"智慧蓉城"为核心数字底座，立足公园城市示范区建设，依托大数据、人工智能、数字孪生等前沿技术，让天府绿道可感知、城市运行可预判、市民服务更便捷。千年蓉城在数字时代，继续演绎"慢生活"与"快科技"的完美融合。</p>
+            <p class="list-item">▪ 智慧蓉城城市大脑，统筹全城运行数据</p>
+            <p class="list-item">▪ 天府绿道数字监测，生态环境实时感知</p>
+            <p class="list-item">▪ 智慧文旅一键畅游，宽窄巷子、熊猫基地客流预警</p>
+            <p class="list-item">▪ 西部智算中心集群，赋能科创产业升级</p>
+            <p class="list-item">▪ 智慧社区快速响应，15分钟生活圈更宜居</p>
+        </div>
+        
+        <p class="river-text">锦江流淌 · 滋养烟火蓉城与数字未来</p>
+        
+        <div class="chart-section">
+            <h3>城市治理数据分析</h3>
+            <div class="chart-two-col">
+                <div id="chart1" class="chart-box"></div>
+                <div id="chart2" class="chart-box"></div>
+            </div>
+        </div>
+        <div class="chart-section">
+            <h3>产业民生数据分析</h3>
+            <div class="chart-two-col">
+                <div id="chart3" class="chart-box"></div>
+                <div id="chart4" class="chart-box"></div>
+            </div>
+        </div>
+        <div class="chart-section">
+            <h3>便民服务数据分析</h3>
+            <div class="chart-two-col">
+                <div id="chart5" class="chart-box"></div>
+                <div id="chart6" class="chart-box"></div>
+            </div>
+        </div>
+        
+        <div class="img-gallery-wrap">
+            <h3 class="img-gallery-title">成都城市实景</h3>
+            <div class="img-gallery">
+                <div class="img-item"><img src="img/cd1.jpg" alt="成都天府广场"></div>
+                <div class="img-item"><img src="img/cd2.jpg" alt="成都宽窄巷子"></div>
+                <div class="img-item"><img src="img/cd3.jpg" alt="成都天府绿道"></div>
+                <div class="img-item"><img src="img/cd4.jpg" alt="成都大熊猫基地"></div>
+            </div>
+        </div>
+        
+        <div class="life-block">
+            <h3>数字技术走进蓉城百姓生活</h3>
+            <p class="life-text">智慧蓉城平台汇聚城市运行数据，让天府绿道上的每一盏路灯、每一片绿地都有数据感知。市民打开手机就能查询绿道空气质量、预约健身场馆，公园里的智能座椅还能连接手机充电。宽窄巷子、锦里等热门景区通过大数据实时监测客流，游客提前线上预约，错峰游览不再人挤人。大熊猫繁育研究基地通过AI识别技术，实时监测熊猫行为数据，助力国宝保护。"成都天府通"整合公交地铁、医保社保、医院挂号，一部手机搞定蓉城生活。智慧菜市场连接溯源数据，市民扫二维码就能知道肉菜从哪里来。社区智慧平台快速响应居民报修、求助，15分钟生活圈越来越便利。大数据没有改变成都的安逸，而是让"巴适"的生活更有科技温度。</p>
+        </div>
+        
+        <div class="bottom-bar">
+            <h3>成都：烟火蓉城打造智慧公园城市样板</h3>
+            <p>智慧蓉城、天府绿道、数字文旅深度融合，千年古蜀文明与数字科技交相辉映，让公园城市示范区既有绿意又有智慧，走出一条"慢生活+快科技"的成都路径。</p>
+        </div>
+    </div>
+	<div class="back-top">↑</div>
+    
+    <script>
+        const foldNav = document.querySelector('.fold-nav');
+        window.addEventListener('scroll', () => { if (window.scrollY > 60) { foldNav.classList.add('show'); } else { foldNav.classList.remove('show'); foldNav.classList.remove('menu-open'); } });
+        const navBtn = document.getElementById('navBtn');
+        navBtn.addEventListener('click', (e) => { e.stopPropagation(); foldNav.classList.toggle('menu-open'); });
+        document.addEventListener('click', (e) => { if (!foldNav.contains(e.target)) { foldNav.classList.remove('menu-open'); } });
+
+        const backTopBtn = document.querySelector('.back-top');
+        window.addEventListener('scroll',()=>{ if(window.scrollY > 300){ backTopBtn.classList.add('show'); } else { backTopBtn.classList.remove('show'); } })
+        backTopBtn.onclick = function(){ window.scrollTo({top:0,behavior:'smooth'}) }
+
+        // 极速渲染图表（只要 DOM 加载完就画，不等待所有图片加载）
+        document.addEventListener("DOMContentLoaded", function(){
+            const isMobile = window.innerWidth <= 768;
+            const titleFontSize = isMobile ? 13 : 16;
+            const axisFontSize = isMobile ? 10 : 12;
+            const legendFontSize = isMobile ? 10 : 12;
+
+            const chart1 = echarts.init(document.getElementById('chart1'));
+            chart1.setOption({
+                title:{ text:"智慧蓉城：历年接入数据源数量", left:"center", textStyle:{fontSize: titleFontSize} },
+                tooltip:{trigger:"axis"}, grid:{left:40,right:15,top:40,bottom:30},
+                xAxis:{ type:"category", data:['2015','2016','2017','2018','2019','2020','2021','2022','2023','2024'], axisLabel:{fontSize: axisFontSize, rotate: 30} },
+                yAxis:{ type:"value", name:"数量", nameTextStyle:{fontSize: 10} },
+                series:[{ type:"line", data:[5,9,14,20,28,42,58,76,98,124], itemStyle:{color:"#2c786c"}, lineStyle:{color:"#2c786c",width:3}, symbol:"circle", symbolSize:6 }]
+            });
+
+            const chart2 = echarts.init(document.getElementById('chart2'));
+            chart2.setOption({
+                title:{ text:"天府绿道：生态监测站点数量", left:"center", textStyle:{fontSize: titleFontSize} },
+                tooltip:{trigger:"axis"}, grid:{left:40,right:15,top:40,bottom:30},
+                xAxis:{ type:"category", data:["2015","2016","2017","2018","2019","2020","2021","2022","2023","2024"], axisLabel:{fontSize: axisFontSize, rotate: 30} },
+                yAxis:{type:"value"},
+                series:[{ type:"line", areaStyle:{color:"rgba(44,120,108,0.25)"}, data:[12,22,33,45,52,95,130,162,195,231], itemStyle:{color:"#2c786c"} }]
+            });
+
+            const chart3 = echarts.init(document.getElementById('chart3'));
+            chart3.setOption({
+                title:{ text:"西部智算中心算力业务占比", left:"center", textStyle:{fontSize: titleFontSize} },
+                tooltip:{trigger:"item"},
+                legend:{ orient:"vertical", right:0, top:"middle", textStyle:{fontSize: legendFontSize}, itemWidth:10, itemHeight:8 },
+                series:[{ type:"pie", radius:["30%","60%"], center:["40%","50%"], label:{show:true, fontSize: axisFontSize}, data:[ {value:40,name:"医药仿真",itemStyle:{color:"#2c786c"}}, {value:25,name:"AI训练",itemStyle:{color:"#d4a850"}}, {value:20,name:"数字孪生",itemStyle:{color:"#589c90"}}, {value:15,name:"科研计算",itemStyle:{color:"#dcb470"}} ] }]
+            });
+
+            const chart4 = echarts.init(document.getElementById('chart4'));
+            chart4.setOption({
+                title:{ text:"智慧医疗：远程问诊量（万次）", left:"center", textStyle:{fontSize: titleFontSize} },
+                tooltip:{trigger:"axis"}, grid:{left:40,right:15,top:40,bottom:30},
+                xAxis:{ type:"category", data:["2015","2016","2017","2018","2019","2020","2021","2022","2023","2024"], axisLabel:{fontSize: axisFontSize, rotate: 30} },
+                yAxis:{type:"value"},
+                series:[{ type:"line", data:[2,4,7,9,12,22,33,46,60,76], itemStyle:{color:"#d4a850"}, lineStyle:{width:3} }]
+            });
+
+            const chart5 = echarts.init(document.getElementById('chart5'));
+            chart5.setOption({
+                title:{ text:"智慧文旅：景区客流预警次数", left:"center", textStyle:{fontSize: titleFontSize} },
+                tooltip:{trigger:"axis"}, grid:{left:40,right:15,top:40,bottom:30},
+                xAxis:{ type:"category", data:["2015","2016","2017","2018","2019","2020","2021","2022","2023","2024"], axisLabel:{fontSize: axisFontSize, rotate: 30} },
+                yAxis:{type:"value"},
+                series:[{ type:"bar", data:[18,27,36,52,71,84,99,118,142,176], itemStyle:{color:"#2c786c"}, barWidth: 15 }]
+            });
+
+            const chart6 = echarts.init(document.getElementById('chart6'));
+            chart6.setOption({
+                title:{ text:"智慧教育：数字资源覆盖占比", left:"center", textStyle:{fontSize: titleFontSize} },
+                tooltip:{trigger:"item"},
+                legend:{ orient:"vertical", right:10, top:"middle", textStyle:{fontSize: legendFontSize}, itemWidth:10, itemHeight:8 },
+                series:[{ type:"pie", radius:["40%","65%"], center:["40%","50%"], label:{show:true, fontSize: axisFontSize}, data:[ {value:62,name:"城区学校",itemStyle:{color:"#2c786c"}}, {value:38,name:"乡镇学校",itemStyle:{color:"#d4a850"}} ] }]
+            });
+
+            window.addEventListener('resize', () => {
+                chart1.resize(); chart2.resize(); chart3.resize(); chart4.resize(); chart5.resize(); chart6.resize();
+            });
+        });
+    </script>
+</body>
+</html>
