@@ -28,14 +28,13 @@ body{
     position:relative;
     transform-style:preserve-3d;
     transition:transform 0.15s ease-out;
-    will-change: transform; 
+    will-change: transform; /* 开启GPU加速 */
 }
-/* 背景图加载前的深色骨架占位 */
 .top-box > img{
     width:100%;
     height:auto;
     display:block;
-    background-color: #1a1f3a; 
+    background-color: #1a1f3a; /* 骨架底色 */
 }
 .title-text{
     position:absolute;
@@ -79,7 +78,6 @@ body{
     transform-style:preserve-3d;
     z-index:1;
     cursor:pointer;
-    /* 卡片没加载出来前显示深蓝色底 */
     background-color: #2a3550; 
     will-change: left, top, transform;
 }
@@ -219,15 +217,16 @@ footer{
         z-index: 10;
     }
 
-    /* 彻底取消手机端的 transition，防止手机 CPU 渲染动画 */
+    /* 手机端恢复丝滑的位移动画（图片变小了，带得动了） */
     .city-card {
         position: absolute !important;
         width: 26%; 
         border-radius: 8px;
         box-shadow: 0 4px 16px rgba(0,0,0,.45);
-        transition: none !important; 
+        transition: left .8s ease, top .8s ease, z-index .8s ease;
         -webkit-tap-highlight-color: transparent;
         touch-action: manipulation;
+        will-change: left, top;
         overflow: hidden; 
     }
     
@@ -241,12 +240,12 @@ footer{
         transform: scale(1.15); 
     }
 
-    /* 手机端绝对定位 */
-    .city-card.p0 { left: 5%;  top: 15%; z-index: 2; transform: none; }
-    .city-card.p1 { left: 37%; top: 15%; z-index: 3; transform: none; }
-    .city-card.p2 { left: 69%; top: 15%; z-index: 2; transform: none; }
-    .city-card.p3 { left: 21%; top: 48%; z-index: 10; transform: none; }
-    .city-card.p4 { left: 53%; top: 48%; z-index: 10; transform: none; }
+    /* 手机屏幕错落位置 */
+    .city-card.p0 { left: 5%;  top: 15%; z-index: 2; }
+    .city-card.p1 { left: 37%; top: 15%; z-index: 3; }
+    .city-card.p2 { left: 69%; top: 15%; z-index: 2; }
+    .city-card.p3 { left: 21%; top: 48%; z-index: 10; }
+    .city-card.p4 { left: 53%; top: 48%; z-index: 10; }
 
     .city-card.p3 {
         box-shadow: 0 4px 16px rgba(0,0,0,.45);
@@ -270,7 +269,7 @@ footer{
 <body>
 <div id="page">
     <div class="top-box">
-        <!-- 背景图，解码时不会卡死 -->
+        <!-- 记得确认这里图片的后缀名对不对（.jpg 还是 .webp） -->
         <img src="img/sy.jpg" alt="背景" decoding="async" fetchpriority="high">
         
         <div class="drone" onclick="location.href='time.html'" title="点击进入时光记忆墙">
@@ -286,7 +285,7 @@ footer{
         <div class="city-wrap">
             <div class="city-card p0" onclick="location.href='shanghai.html'"><img src="img/sh.jpg" decoding="async" alt="上海"></div>
             <div class="city-card p1" onclick="location.href='shenzhen.html'"><img src="img/sz.jpg" decoding="async" alt="深圳"></div>
-            <div class="city-card p2" onclick="location.href='guizhou.html'"><img src="img/gz.webp" decoding="async" alt="贵州"></div>
+            <div class="city-card p2" onclick="location.href='guizhou.html'"><img src="img/gz.png" decoding="async" alt="贵州"></div>
             <div class="city-card p4" onclick="location.href='chengdu.html'"><img src="img/cd.jpg" decoding="async" alt="成都"></div>
             <div class="city-card p3" onclick="location.href='hangzhou.html'"><img src="img/hz.jpg" decoding="async" alt="杭州"></div>
         </div>
@@ -318,26 +317,25 @@ pageDom.addEventListener('mouseleave', () => {
 });
 
 /* =========================================
-   卡片轮换动画 (如果是手机端，彻底不执行定时器)
+   卡片轮换动画 (电脑手机都开启，因为图片变小了)
    ========================================= */
 const route = ["p0","p1","p2","p4","p3"];
 const cards = document.querySelectorAll('.city-card');
 let step = 0;
 
-if (!isMobile()) {
-    setTimeout(()=>{
-        setInterval(()=>{
-            cards.forEach(card=>{
-                card.classList.remove("p0","p1","p2","p3","p4");
-            });
-            for(let i=0;i<5;i++){
-                const posIndex=(i+step)%5;
-                cards[i].classList.add(route[posIndex]);
-            }
-            step++;
-        }, 4000);
-    }, 2000);
-}
+// 移除之前的 isMobile 拦截，现在手机端也能流畅轮播了
+setTimeout(()=>{
+    setInterval(()=>{
+        cards.forEach(card=>{
+            card.classList.remove("p0","p1","p2","p3","p4");
+        });
+        for(let i=0;i<5;i++){
+            const posIndex=(i+step)%5;
+            cards[i].classList.add(route[posIndex]);
+        }
+        step++;
+    }, 4000);
+}, 2000);
 </script>
 </body>
 </html>
