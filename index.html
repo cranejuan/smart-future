@@ -28,13 +28,11 @@ body{
     position:relative;
     transform-style:preserve-3d;
     transition:transform 0.15s ease-out;
-    will-change: transform; /* 开启GPU加速 */
 }
 .top-box > img{
     width:100%;
     height:auto;
     display:block;
-    background-color: #1a1f3a; /* 骨架底色 */
 }
 .title-text{
     position:absolute;
@@ -74,26 +72,28 @@ body{
     overflow:hidden;
     box-shadow:0 4px 22px rgba(0,0,0,0.5);
     opacity:1;
-    transition:left 1s ease, top 1s ease, z-index 1s ease, transform 1s ease;
+    /* 统一使用 transform 进行滑动，保证性能 */
+    transition: transform 1s cubic-bezier(0.25, 1, 0.5, 1), z-index 1s;
     transform-style:preserve-3d;
-    z-index:1;
     cursor:pointer;
-    background-color: #2a3550; 
-    will-change: left, top, transform;
 }
 .city-card:hover{
-    transform:scale(1.1) translateZ(20px) rotateY(3deg);
+    z-index: 100 !important;
+    transform: scale(1.1) translateZ(20px) rotateY(3deg) !important;
 }
 .city-card img{
     width:100%;
     height:auto;
     display:block;
 }
-.p0{left:6%;top:30%;z-index:2;transform:translateZ(20px);}
-.p1{left:40%;top:30%;z-index:3;transform:translateZ(50px);}
-.p2{left:74%;top:30%;z-index:2;transform:translateZ(20px);}
-.p3{left:22%;top:58%;z-index:10;transform:translateZ(80px);}
-.p4{left:58%;top:58%;z-index:10;transform:translateZ(80px);}
+
+/* 电脑端 5 个固定坐标 */
+.pc-p0 { left: 6%;  top: 30%; z-index: 2; transform: translateZ(20px); }
+.pc-p1 { left: 40%; top: 30%; z-index: 3; transform: translateZ(50px); }
+.pc-p2 { left: 74%; top: 30%; z-index: 2; transform: translateZ(20px); }
+.pc-p3 { left: 22%; top: 58%; z-index: 10; transform: translateZ(80px); }
+.pc-p4 { left: 58%; top: 58%; z-index: 10; transform: translateZ(80px); }
+
 .drone{
     position:absolute;
     width:18%;
@@ -102,7 +102,6 @@ body{
     z-index:15;
     transform-style:preserve-3d;
     animation:droneFloat 3s ease-in-out infinite;
-    will-change: transform;
 }
 .drone > img{
     width:100%;
@@ -146,64 +145,17 @@ footer{
 
 /* ========== 手机端适配 ========== */
 @media (max-width:768px){
-    html, body {
-        height: 100vh;
-        overflow: hidden;
-        overscroll-behavior: none;
-    }
+    html, body { height: 100vh; overflow: hidden; overscroll-behavior: none; }
+    #page { width: 100%; height: 100%; perspective: none; overflow: hidden; }
+    .top-box { width: 100%; height: 100%; transform: none !important; }
+    .top-box > img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top; z-index: 0; }
+    .title-text { top: 10%; padding: 0 14px; z-index: 20; }
+    .title-text h2 { font-size: clamp(20px, 5.5vw, 28px); margin-bottom: 8px; }
+    .title-text p { font-size: clamp(12px, 3.2vw, 15px); line-height: 1.6; }
     
-    #page {
-        width: 100%;
-        height: 100%;
-        perspective: none;
-        overflow: hidden;
-    }
-
-    .top-box {
-        width: 100%;
-        height: 100%;
-        transform: none !important; 
-    }
-
-    .top-box > img {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center top;
-        z-index: 0;
-    }
-
-    .title-text {
-        top: 10%;
-        padding: 0 14px;
-        z-index: 20;
-    }
-    .title-text h2 {
-        font-size: clamp(20px, 5.5vw, 28px);
-        margin-bottom: 8px;
-    }
-    .title-text p {
-        font-size: clamp(12px, 3.2vw, 15px);
-        line-height: 1.6;
-    }
-
-    .drone {
-        top: 12%; 
-        left: auto;
-        right: 6%;
-        width: 25%;
-        z-index: 25;
-    }
-    .drone > img {
-        transform: none;
-        filter: drop-shadow(0 6px 10px rgba(0,0,0,.45));
-    }
-    .drone-shadow {
-        display: none; 
-    }
+    .drone { top: 12%; left: auto; right: 6%; width: 25%; z-index: 25; }
+    .drone > img { transform: none; filter: drop-shadow(0 6px 10px rgba(0,0,0,.45)); }
+    .drone-shadow { display: none; }
 
     .city-wrap {
         position: absolute;
@@ -217,59 +169,33 @@ footer{
         z-index: 10;
     }
 
-    /* 手机端恢复丝滑的位移动画（图片变小了，带得动了） */
     .city-card {
         position: absolute !important;
         width: 26%; 
         border-radius: 8px;
         box-shadow: 0 4px 16px rgba(0,0,0,.45);
-        transition: left .8s ease, top .8s ease, z-index .8s ease;
-        -webkit-tap-highlight-color: transparent;
-        touch-action: manipulation;
-        will-change: left, top;
-        overflow: hidden; 
+        transition: transform 0.8s ease-in-out;
     }
-    
     .city-card:hover { transform: none; }
 
-    .city-card img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center 20%; 
-        transform: scale(1.15); 
-    }
+    .city-card img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; transform: scale(1.15); }
 
-    /* 手机屏幕错落位置 */
-    .city-card.p0 { left: 5%;  top: 15%; z-index: 2; }
-    .city-card.p1 { left: 37%; top: 15%; z-index: 3; }
-    .city-card.p2 { left: 69%; top: 15%; z-index: 2; }
-    .city-card.p3 { left: 21%; top: 48%; z-index: 10; }
-    .city-card.p4 { left: 53%; top: 48%; z-index: 10; }
+    /* 手机端 5 个固定坐标 */
+    .mb-p0 { left: 5%;  top: 15%; z-index: 2; transform: translateZ(0); }
+    .mb-p1 { left: 37%; top: 15%; z-index: 3; transform: translateZ(0); }
+    .mb-p2 { left: 69%; top: 15%; z-index: 2; transform: translateZ(0); }
+    .mb-p3 { left: 21%; top: 48%; z-index: 10; transform: translateZ(0); }
+    .mb-p4 { left: 53%; top: 48%; z-index: 10; transform: translateZ(0); }
 
-    .city-card.p3 {
-        box-shadow: 0 4px 16px rgba(0,0,0,.45);
-    }
+    .city-card.mb-p3 { box-shadow: 0 4px 16px rgba(0,0,0,.45); }
     
-    .tip-text, footer {
-        display: none; 
-    }
-}
-
-@media (min-width:560px) and (max-width:768px){
-    .city-card { width: 22%; }
-    .city-card.p0 { left: 8%; top: 15%; }
-    .city-card.p1 { left: 39%; top: 15%; }
-    .city-card.p2 { left: 70%; top: 15%; }
-    .city-card.p3 { left: 23%; top: 50%; }
-    .city-card.p4 { left: 55%; top: 50%; }
+    .tip-text, footer { display: none; }
 }
 </style>
 </head>
 <body>
 <div id="page">
     <div class="top-box">
-        <!-- 记得确认这里图片的后缀名对不对（.jpg 还是 .webp） -->
         <img src="img/sy.jpg" alt="背景" decoding="async" fetchpriority="high">
         
         <div class="drone" onclick="location.href='time.html'" title="点击进入时光记忆墙">
@@ -283,11 +209,12 @@ footer{
         </div>
         
         <div class="city-wrap">
-            <div class="city-card p0" onclick="location.href='shanghai.html'"><img src="img/sh.jpg" decoding="async" alt="上海"></div>
-            <div class="city-card p1" onclick="location.href='shenzhen.html'"><img src="img/sz.jpg" decoding="async" alt="深圳"></div>
-            <div class="city-card p2" onclick="location.href='guizhou.html'"><img src="img/gz.png" decoding="async" alt="贵州"></div>
-            <div class="city-card p4" onclick="location.href='chengdu.html'"><img src="img/cd.jpg" decoding="async" alt="成都"></div>
-            <div class="city-card p3" onclick="location.href='hangzhou.html'"><img src="img/hz.jpg" decoding="async" alt="杭州"></div>
+            <!-- 初始位置直接用 pc 的类名，JS 会自动接管 -->
+            <div class="city-card pc-p0" onclick="location.href='shanghai.html'"><img src="img/sh.jpg" decoding="async" alt="上海"></div>
+            <div class="city-card pc-p1" onclick="location.href='shenzhen.html'"><img src="img/sz.jpg" decoding="async" alt="深圳"></div>
+            <div class="city-card pc-p2" onclick="location.href='guizhou.html'"><img src="img/gz.png" decoding="async" alt="贵州"></div>
+            <div class="city-card pc-p4" onclick="location.href='chengdu.html'"><img src="img/cd.jpg" decoding="async" alt="成都"></div>
+            <div class="city-card pc-p3" onclick="location.href='hangzhou.html'"><img src="img/hz.jpg" decoding="async" alt="杭州"></div>
         </div>
     </div>
     <p class="tip-text">— 点击城市卡片，探索数智城市 —</p>
@@ -302,9 +229,7 @@ const topBox = document.querySelector('.top-box');
 const pageDom = document.querySelector('#page');
 const isMobile = () => window.matchMedia('(max-width:768px)').matches;
 
-/* =========================================
-   电脑端专属：鼠标 3D 视差
-   ========================================= */
+/* 电脑端 3D 视差 */
 pageDom.addEventListener('mousemove', e => {
     if(isMobile()) return;
     const x = e.clientX / window.innerWidth - 0.5;
@@ -317,25 +242,31 @@ pageDom.addEventListener('mouseleave', () => {
 });
 
 /* =========================================
-   卡片轮换动画 (电脑手机都开启，因为图片变小了)
+   卡片轮换定时器（强力驱动，不依赖繁琐 class）
    ========================================= */
-const route = ["p0","p1","p2","p4","p3"];
 const cards = document.querySelectorAll('.city-card');
 let step = 0;
 
-// 移除之前的 isMobile 拦截，现在手机端也能流畅轮播了
-setTimeout(()=>{
-    setInterval(()=>{
-        cards.forEach(card=>{
-            card.classList.remove("p0","p1","p2","p3","p4");
+setTimeout(() => {
+    setInterval(() => {
+        // 获取当前是电脑还是手机
+        const isMb = isMobile();
+        const prefix = isMb ? 'mb-p' : 'pc-p';
+
+        // 每次重新分配所有卡片的位置类
+        cards.forEach((card, index) => {
+            // 计算新位置
+            const posIndex = (index + step) % 5;
+            
+            // 强行清空之前绑定的位置类（pc和mb都清）
+            card.className = 'city-card'; 
+            
+            // 重新赋予新位置
+            card.classList.add(prefix + posIndex);
         });
-        for(let i=0;i<5;i++){
-            const posIndex=(i+step)%5;
-            cards[i].classList.add(route[posIndex]);
-        }
         step++;
-    }, 4000);
-}, 2000);
+    }, 3500); // 3.5秒动一次
+}, 1500);
 </script>
 </body>
 </html>
